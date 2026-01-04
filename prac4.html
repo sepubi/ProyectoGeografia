@@ -43,9 +43,19 @@
         // Intentar cargar GeoJSON, ZIP o directamente .shp + .dbf en la raíz
         function tryLoadFiles(){
             var geojsonCandidates = ['../ZONAS_VALIDAS.geojson','ZONAS_VALIDAS.geojson'];
-            var zipCandidates = ['../ZONAS_VALIDAS.zip','ZONAS_VALIDAS.zip'];
-            var shpCandidates = ['../ZONAS_VALIDAS.shp','ZONAS_VALIDAS.shp'];
-            var dbfCandidates = ['../ZONAS_VALIDAS.dbf','ZONAS_VALIDAS.dbf'];
+var zipCandidates = [
+    'pdf/ZONAS_VALIDAS.zip',
+    '../pdf/ZONAS_VALIDAS.zip'
+];
+var shpCandidates = [
+    'pdf/ZONAS_VALIDAS.zip',
+    '../pdf/ZONAS_VALIDAS.zip'
+];
+var dbfCandidates = [
+    'pdf/ZONAS_VALIDAS.zip',
+    '../pdf/ZONAS_VALIDAS.zip'
+];
+    
 
             // 1) Intentar GeoJSON
             fetch(geojsonCandidates[0]).then(function(r){
