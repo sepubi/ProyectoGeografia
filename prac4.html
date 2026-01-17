@@ -2,154 +2,224 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualización ZONAS_VALIDAS</title>
+    <title>Geografía Interactiva | Práctica 5</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <style>
-        body { margin: 0; padding: 0; }
-        #map { width: 100vw; height: 100vh; }
+        /* --- VARIABLES --- */
+        :root {
+            --bg-dark: #09090b;
+            --card-bg: rgba(24, 24, 27, 0.75);
+            --border: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+
+        /* --- BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(3px);
+            z-index: -1;
+        }
+
+        /* --- HEADER --- */
+        header {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        .branding h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, #ffffff, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-back {
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center; gap: 8px;
+        }
+
+        /* --- DASHBOARD CARD --- */
+        .dashboard-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+        .card-header { padding: 20px 24px; display: flex; justify-content: space-between; }
+
+        /* --- CONTENEDOR DEL MAPA --- */
+        .window-frame {
+            background: #000;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            height: 600px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .window-top {
+            background: #1f1f23;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            gap: 6px;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        #map {
+            width: 100%;
+            height: calc(100% - 32px);
+            margin-top: 32px;
+            z-index: 1;
+        }
+
+        /* --- FOOTER --- */
+        .card-footer { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        footer { text-align: center; margin-top: 60px; color: var(--text-muted); }
+        
+        /* Ajuste para que los Popups del mapa se vean bien en el diseño oscuro */
+        .leaflet-popup-content-wrapper { background: #1f1f23; color: white; border: 1px solid var(--border); }
+        .leaflet-popup-tip { background: #1f1f23; }
     </style>
 </head>
 <body>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/shpjs@3.5.0/dist/shp.min.js"></script>
-    <script>
-        // Inicializar el mapa
-        var map = L.map('map');
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
 
-        // Capa para zonas
-        var zonasLayer = L.geoJSON(null, {
-            style: function(){ return {color: '#ff5722', weight: 2, fillOpacity: 0.2}; },
-            onEachFeature: function(feature, layer){
-                var props = feature.properties || {};
-                var info = Object.keys(props).map(function(k){ return '<b>'+k+':</b> '+props[k]; }).join('<br>');
-                if(info) layer.bindPopup(info);
-            }
-        }).addTo(map);
+<header>
+    <div class="branding">
+        <h1>Geografía Interactiva</h1>
+        <p>Visualización ZONAS_VALIDAS • Práctica 5</p>
+    </div>
+    <a href="index.html" class="btn-back">
+        <i class="ri-arrow-left-line"></i> Volver al Menú
+    </a>
+</header>
 
-        // Fallback GeoJSON (ejemplo) — se usará si no hay archivos en la raíz
-        var ejemplo = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id":1},"geometry":{"type":"Polygon","coordinates":[[[-3.693051776999949,40.42861623500005],[-3.692485854999939,40.42776840700008],[-3.691924610999946,40.42801452400006],[-3.692482319999942,40.42885408600005],[-3.693051776999949,40.42861623500005]]]}}]};
+<main>
+    <article class="dashboard-card">
+        <div class="card-header">
+            <h2><i class="ri-map-2-fill" style="color:#ff5722;"></i> Zonas Válidas</h2>
+        </div>
 
-        function addGeoJSON(data){
-            zonasLayer.clearLayers();
-            zonasLayer.addData(data);
-            try{ map.fitBounds(zonasLayer.getBounds()); }catch(e){ map.setView([40.4286, -3.6930], 14); }
+        <div class="window-frame">
+            <div class="window-top">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <div class="card-footer">
+            <span id="status" style="font-size: 0.8rem; color: var(--text-muted);">
+                <i class="ri-loader-4-line"></i> Cargando archivos...
+            </span>
+            <a href="pdf/ZONAS_VALIDAS.zip" class="btn-back" style="font-size: 0.8rem; background: var(--primary); border:none;">
+                <i class="ri-download-cloud-line"></i> Descargar SHP
+            </a>
+        </div>
+    </article>
+</main>
+
+<footer>
+    <p>Desarrollado por <strong>Alexandru David</strong> y <strong>Sergi Puig</strong> &mdash; 2026</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/shpjs@3.5.0/dist/shp.min.js"></script>
+
+<script>
+    // 1. Inicializar el mapa (exactamente como en tu ejemplo)
+    var map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 2. Capa para zonas (color naranja brillante de tu ejemplo)
+    var zonasLayer = L.geoJSON(null, {
+        style: function(){ return {color: '#ff5722', weight: 2, fillOpacity: 0.2}; },
+        onEachFeature: function(feature, layer){
+            var props = feature.properties || {};
+            var info = Object.keys(props).map(function(k){ return '<b>'+k+':</b> '+props[k]; }).join('<br>');
+            if(info) layer.bindPopup(info);
         }
+    }).addTo(map);
 
-        // Intentar cargar GeoJSON, ZIP o directamente .shp + .dbf en la raíz
-        function tryLoadFiles(){
-            var geojsonCandidates = ['../ZONAS_VALIDAS.geojson','ZONAS_VALIDAS.geojson'];
-var zipCandidates = [
-    'pdf/ZONAS_VALIDAS.zip',
-    '../pdf/ZONAS_VALIDAS.zip'
-];
-var shpCandidates = [
-    'pdf/ZONAS_VALIDAS.zip',
-    '../pdf/ZONAS_VALIDAS.zip'
-];
-var dbfCandidates = [
-    'pdf/ZONAS_VALIDAS.zip',
-    '../pdf/ZONAS_VALIDAS.zip'
-];
-    
+    // 3. Lógica de carga de datos
+    var ejemplo = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id":"EJEMPLO"},"geometry":{"type":"Polygon","coordinates":[[[-3.69305,40.4286],[-3.69248,40.4277],[-3.69192,40.4280],[-3.69248,40.4288],[-3.69305,40.4286]]]}}]};
 
-            // 1) Intentar GeoJSON
-            fetch(geojsonCandidates[0]).then(function(r){
-                if(r.ok) return r.json();
-                return fetch(geojsonCandidates[1]).then(function(r2){ if(r2.ok) return r2.json(); throw new Error('no-geojson'); });
-            }).then(function(json){
-                addGeoJSON(json);
-                hideInfo();
-            }).catch(function(){
-                // 2) Intentar ZIP (shapefile comprimido)
-                fetch(zipCandidates[0]).then(function(r){
-                    if(r.ok) return r.arrayBuffer();
-                    return fetch(zipCandidates[1]).then(function(r2){ if(r2.ok) return r2.arrayBuffer(); throw new Error('no-zip'); });
-                }).then(function(buf){
-                    shp(buf).then(function(geojson){
-                        addGeoJSON(geojson);
-                        hideInfo();
-                    }).catch(function(err){
-                        console.error('error parse shp zip',err);
-                        showInfo('Error al leer el ZIP. Revisa que el ZIP contenga .shp, .shx y .dbf.');
-                        addGeoJSON(ejemplo);
-                    });
-                }).catch(function(){
-                    // 3) Intentar leer directamente el .shp (sin zip) — mostrará geometrías; intentamos también .dbf para atributos
-                    fetch(shpCandidates[0]).then(function(r){
-                        if(r.ok) return r.arrayBuffer();
-                        return fetch(shpCandidates[1]).then(function(r2){ if(r2.ok) return r2.arrayBuffer(); throw new Error('no-shp'); });
-                    }).then(function(shpBuf){
-                        var geometries;
-                        try{
-                            geometries = shp.parseShp(shpBuf);
-                        }catch(e){
-                            console.error('Error parseShp', e);
-                            showInfo('Error al leer el .shp directamente.');
-                            addGeoJSON(ejemplo);
-                            return;
-                        }
+    function addGeoJSON(data){
+        zonasLayer.clearLayers();
+        zonasLayer.addData(data);
+        try{ 
+            map.fitBounds(zonasLayer.getBounds()); 
+        } catch(e){ 
+            map.setView([40.4286, -3.6930], 14); 
+        }
+        document.getElementById('status').innerHTML = '<i class="ri-check-line"></i> Datos cargados';
+    }
 
-                        // Intentar cargar DBF para atributos
-                        fetch(dbfCandidates[0]).then(function(rdb){
-                            if(rdb.ok) return rdb.arrayBuffer();
-                            return fetch(dbfCandidates[1]).then(function(rdb2){ if(rdb2.ok) return rdb2.arrayBuffer(); throw new Error('no-dbf'); });
-                        }).then(function(dbfBuf){
-                            var records = [];
-                            try{ records = shp.parseDbf(dbfBuf); }catch(e){ console.warn('parseDbf falló', e); }
-                            // Construir FeatureCollection
-                            var features = [];
-                            // geometries puede ser FeatureCollection o un array de geometries
-                            var geomsArray = geometries.features ? geometries.features.map(f=>f.geometry) : (Array.isArray(geometries)?geometries:[]);
-                            for(var i=0;i<geomsArray.length;i++){
-                                features.push({type:'Feature', properties: records[i]||{}, geometry: geomsArray[i]});
-                            }
-                            addGeoJSON({type:'FeatureCollection', features:features});
-                            hideInfo();
-                        }).catch(function(){
-                            // No hay DBF — construir con geometrías sólo
-                            var features = [];
-                            var geomsArray = geometries.features ? geometries.features.map(f=>f.geometry) : (Array.isArray(geometries)?geometries:[]);
-                            for(var i=0;i<geomsArray.length;i++){
-                                features.push({type:'Feature', properties: {}, geometry: geomsArray[i]});
-                            }
-                            showInfo('Se cargó el .shp directamente (sin atributos, falta .dbf).');
-                            addGeoJSON({type:'FeatureCollection', features:features});
-                        });
+    function tryLoadFiles(){
+        var geojsonCandidates = ['../ZONAS_VALIDAS.geojson','ZONAS_VALIDAS.geojson'];
+        var zipCandidates = ['pdf/ZONAS_VALIDAS.zip', '../pdf/ZONAS_VALIDAS.zip'];
 
-                    }).catch(function(){
-                        // 4) Nada encontrado: mostrar instrucciones y fallback
-                        showInfo('No se encontró ZONAS_VALIDAS (.geojson .zip o .shp) en la raíz. Coloca "ZONAS_VALIDAS.shp" (y opcionalmente .dbf) en la raíz del repo. Se mostrará un ejemplo.');
-                        addGeoJSON(ejemplo);
-                    });
-                });
+        // Intentar GeoJSON primero
+        fetch(geojsonCandidates[0]).then(r => r.ok ? r.json() : fetch(geojsonCandidates[1]).then(r2 => r2.json()))
+        .then(json => addGeoJSON(json))
+        .catch(() => {
+            // Si falla, intentar el ZIP
+            fetch(zipCandidates[0]).then(r => r.ok ? r.arrayBuffer() : fetch(zipCandidates[1]).then(r2 => r2.arrayBuffer()))
+            .then(buf => shp(buf))
+            .then(geojson => addGeoJSON(geojson))
+            .catch(() => {
+                console.warn("Usando datos de ejemplo");
+                addGeoJSON(ejemplo);
+                document.getElementById('status').innerText = "Archivo no encontrado. Mostrando ejemplo.";
             });
-        }
+        });
+    }
 
-        // UI de información (mensaje superior derecho)
-        var infoDiv = document.createElement('div');
-        infoDiv.style.position = 'absolute';
-        infoDiv.style.top = '12px';
-        infoDiv.style.right = '12px';
-        infoDiv.style.zIndex = 1000;
-        infoDiv.style.background = 'rgba(2,31,47,0.85)';
-        infoDiv.style.color = '#fff';
-        infoDiv.style.padding = '10px 14px';
-        infoDiv.style.borderRadius = '8px';
-        infoDiv.style.boxShadow = '0 6px 18px rgba(0,0,0,0.4)';
-        infoDiv.style.maxWidth = '320px';
-        infoDiv.innerHTML = '';
-        document.body.appendChild(infoDiv);
+    tryLoadFiles();
+</script>
 
-        function showInfo(msg){ infoDiv.innerHTML = msg; infoDiv.style.display='block'; }
-        function hideInfo(){ infoDiv.style.display='none'; }
-
-        // Ejecutar intento de carga
-        tryLoadFiles();
-    </script>
 </body>
 </html>

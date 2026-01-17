@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Geografía Interactiva | Práctica 5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES Y RESET --- */
+        :root {
+            --bg-dark: #09090b;
+            --card-bg: rgba(24, 24, 27, 0.75);
+            --border: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* --- CUERPO Y FONDO --- */
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(3px);
+            z-index: -1;
+        }
+
+        /* --- HEADER --- */
+        header {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        .branding h1 {
+            font-size: 2rem;
+            background: linear-gradient(to right, #ffffff, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- BOTONES --- */
+        .btn-back, .btn-action {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back {
+            color: var(--text-main);
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        /* --- DASHBOARD CARD --- */
+        .dashboard-card {
+            max-width: 1000px; /* Ajustado para mejor visualización */
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        /* --- CONTENEDOR DEL MAPA Y ZOOM --- */
+        .window-frame {
+            background: #000;
+            border-radius: 14px;
+            overflow: hidden; /* Importante para que el zoom no se salga */
+            position: relative;
+            height: 600px; /* Un poco más alto para ver mejor el mapa */
+            cursor: zoom-in;
+        }
+
+        .map-image {
+            width: 100%;
+            height: calc(100% - 32px);
+            object-fit: contain;
+            background: #18181b;
+            display: block;
+            transition: transform 0.4s ease; /* Suaviza el zoom */
+            transform-origin: center;
+        }
+
+        /* Clase que activaremos con JS */
+        .map-image.zoomed {
+            transform: scale(2.5); /* Nivel de zoom */
+            cursor: zoom-out;
+        }
+
+        /* --- ELEMENTOS DECORATIVOS --- */
+        .window-top {
+            background: #1f1f23;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            gap: 6px;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="branding">
+        <h1>Geografía Interactiva</h1>
+        <p>Visualización de datos • Práctica 5</p>
+    </div>
+    <a href="index.html" class="btn-back">
+        <i class="ri-arrow-left-line"></i> Volver al Menú
+    </a>
+</header>
+
+<main>
+    <article class="dashboard-card">
+        <div class="card-header">
+            <div class="card-title" style="padding: 15px;">
+                <h2><i class="ri-map-2-fill" style="color:#22c55e;"></i> Severidad</h2>
+            </div>
+        </div>
+
+        <div class="window-frame" id="mapContainer">
+            <div class="window-top">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <img src="pdf/SEVERIDAD.png" class="map-image" id="mapaImg" alt="Mapa de Severidad">
+        </div>
+
+        <div class="card-footer" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted); font-size: 0.8rem;">
+                <i class="ri-mouse-line"></i> Haz clic en el mapa para ampliar
+            </span>
+            <a href="pdf/SEVERIDAD.png" target="_blank" class="btn-action btn-primary">
+                <i class="ri-external-link-line"></i> Pantalla Completa
+            </a>
+        </div>
+    </article>
+</main>
+
+<footer>
+    <p>Desarrollado por <strong>Alexandru David</strong> y <strong>Sergi Puig</strong> &mdash; 2026</p>
+</footer>
+
+<script>
+    const img = document.getElementById('mapaImg');
+    const container = document.getElementById('mapContainer');
+
+    container.addEventListener('click', () => {
+        img.classList.toggle('zoomed');
+    });
+
+    // Opcional: mover el mapa con el ratón cuando hay zoom
+    container.addEventListener('mousemove', (e) => {
+        if (img.classList.contains('zoomed')) {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const xPercent = (x / rect.width) * 100;
+            const yPercent = (y / rect.height) * 100;
+            
+            img.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+        }
+    });
+</script>
+
+</body>
+</html>
