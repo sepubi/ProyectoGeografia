@@ -106,7 +106,7 @@
             background: #111;
             border-radius: 14px;
             overflow: hidden;
-            height: 500px;
+            height: 500px; /* Altura por defecto para otras tarjetas */
             border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
@@ -139,12 +139,12 @@
         .img-container img {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; /* Para que la imagen no se deforme */
+            object-fit: contain;
             transition: transform 0.3s ease;
         }
         
         .img-container img:hover {
-            transform: scale(1.05); /* Zoom suave al pasar el ratón */
+            transform: scale(1.05);
         }
 
         footer { text-align: center; margin-top: 60px; color: var(--text-muted); padding-bottom: 40px; }
@@ -160,7 +160,7 @@
 <header>
     <div class="branding">
         <h1>Geografía Interactiva</h1>
-        <p>Índices de Vegetación (SAVI & EVI) • Práctica 9</p>
+        <p>Índices SAVI y EVI • Práctica 9</p>
     </div>
     <a href="index.html" class="btn-back">
         <i class="ri-arrow-left-line"></i> Volver al Menú
@@ -168,32 +168,18 @@
 </header>
 
 <main>
-    <article class="dashboard-card">
+    <article class="dashboard-card" style="grid-column: 1 / -1;">
         <div class="card-header">
-            <h3><i class="ri-leaf-line" style="color: #4ade80;"></i> Índice SAVI</h3>
-            <span class="tag">Soil Adjusted Vegetation Index</span>
+            <h3><i class="ri-map-pin-user-line" style="color: #60a5fa;"></i> Medio Ambiente Dual</h3>
+            <span class="tag">Mapa Interactivo</span>
         </div>
-        <div class="window-frame">
+        
+        <div class="window-frame" style="height: 800px;">
             <div class="window-top">
                 <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
             </div>
-            <div class="img-container">
-                <img src="pdf/PuigPerez_SAVI_post.png" alt="Análisis SAVI">
-            </div>
-        </div>
-    </article>
-
-    <article class="dashboard-card">
-        <div class="card-header">
-            <h3><i class="ri-plant-line" style="color: #4ade80;"></i> Índice EVI</h3>
-            <span class="tag">Enhanced Vegetation Index</span>
-        </div>
-        <div class="window-frame">
-            <div class="window-top">
-                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            </div>
-            <div class="img-container">
-                <img src="pdf/PuigPerez_EVI_post.png" alt="Análisis EVI">
+            <div class="img-container" style="background: white;">
+                <iframe src="Medio_Ambiente_Dual_Puig_David.html" style="width: 100%; height: 100%; border: none;"></iframe>
             </div>
         </div>
     </article>
