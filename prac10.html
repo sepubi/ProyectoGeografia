@@ -6,15 +6,13 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
         :root {
             --bg-dark: #09090b;
-            --card-bg: rgba(24, 24, 27, 0.75);
+            --card-bg: rgba(24, 24, 27, 0.85);
             --border: rgba(255, 255, 255, 0.1);
             --primary: #3b82f6;
             --text-main: #ffffff;
@@ -36,12 +34,8 @@
         }
 
         body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(9, 9, 11, 0.85);
-            backdrop-filter: blur(3px);
-            z-index: -1;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(3px); z-index: -1;
         }
 
         header {
@@ -61,6 +55,26 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* BOTÓN VOLVER CON FLECHA */
+        .btn-back {
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            transform: translateX(-5px);
+        }
+
         main {
             max-width: 1400px;
             margin: 0 auto;
@@ -73,58 +87,47 @@
             background: var(--card-bg);
             backdrop-filter: blur(15px);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
+            border-radius: 24px;
             overflow: hidden;
+            display: flex; flex-direction: column;
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
         }
 
         .card-header { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; }
 
         .tag { 
-            font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; 
+            font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; 
             background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); 
         }
 
-        .window-frame { background: #000; display: flex; flex-direction: column; }
-
         .window-top {
-            background: #1f1f23;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            padding-left: 12px;
-            gap: 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: #1f1f23; height: 32px; display: flex; align-items: center; padding-left: 12px; gap: 6px;
         }
 
         .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .red { background: #ff5f56; }
-        .yellow { background: #ffbd2e; }
-        .green { background: #27c93f; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
 
-        /* Contenedor para los Mapas Interactivos */
-        .map-container {
-            width: 100%;
-            height: 450px;
-            background: #050505;
-        }
+        .map-container, .img-container { width: 100%; height: 480px; background: #000; }
+        .img-container img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Contenedor para los GIFs */
-        .img-container {
-            width: 100%;
-            height: 450px;
-            background: #050505;
+        .card-footer {
+            padding: 15px 25px;
+            background: rgba(0,0,0,0.3);
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
         }
 
-        .img-container img {
-            max-width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .btn-external {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
         }
+
+        .btn-external:hover { color: var(--primary); }
 
         footer { text-align: center; margin-top: 60px; color: var(--text-muted); padding-bottom: 40px; }
     </style>
@@ -136,62 +139,77 @@
         <h1>Geografía Interactiva</h1>
         <p>Análisis de Aguas y TimeLapse • Práctica 10</p>
     </div>
+    <a href="index.html" class="btn-back">
+        <i class="ri-arrow-left-line"></i> Volver al Menú
+    </a>
 </header>
 
 <main>
     <article class="dashboard-card">
         <div class="card-header">
-            <h3><i class="ri-drop-line" style="color: #60a5fa;"></i> WebMap Chapala (G6)</h3>
+            <h3><i class="ri-drop-line" style="color: #60a5fa;"></i> WebMap Chapala (NDWI)</h3>
             <span class="tag">Interactivo</span>
         </div>
-        <div class="window-frame">
-            <div class="window-top">
-                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            </div>
-            <div id="map-chapala" class="map-container"></div>
+        <div class="window-top">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div id="map-chapala" class="map-container"></div>
+        <div class="card-footer">
+            <a href="G6_NDWI_Chapala_2025.png" target="_blank" class="btn-external">
+                <i class="ri-map-pin-range-line"></i> Ver Mapa e Imagen original
+            </a>
         </div>
     </article>
 
     <article class="dashboard-card">
         <div class="card-header">
-            <h3><i class="ri-drop-line" style="color: #60a5fa;"></i> WebMap Rukwa (G7)</h3>
-            <span class="tag">Interactivo</span>
+            <h3><i class="ri-drop-line" style="color: #60a5fa;"></i> WebMap Rukwa (MNDWI)</h3>
+            <span class="tag">Interactivo + Giro</span>
         </div>
-        <div class="window-frame">
-            <div class="window-top">
-                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            </div>
-            <div id="map-rukwa" class="map-container"></div>
+        <div class="window-top">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
         </div>
-    </article>
-
-    <article class="dashboard-card">
-        <div class="card-header">
-            <h3><i class="ri-movie-line" style="color: #a78bfa;"></i> TimeLapse L9</h3>
-            <span class="tag">GIF 2024</span>
-        </div>
-        <div class="window-frame">
-            <div class="window-top">
-                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            </div>
-            <div class="img-container">
-                <img src="TimeLapse_L9.gif" alt="TimeLapse Landsat 9">
-            </div>
+        <div id="map-rukwa" class="map-container"></div>
+        <div class="card-footer">
+            <a href="G7_MNDWI_Rukwa_2025.png" target="_blank" class="btn-external">
+                <i class="ri-map-pin-range-line"></i> Ver Mapa e Imagen original
+            </a>
         </div>
     </article>
 
     <article class="dashboard-card">
         <div class="card-header">
-            <h3><i class="ri-movie-line" style="color: #a78bfa;"></i> TimeLapse S2</h3>
-            <span class="tag">GIF 2024</span>
+            <h3><i class="ri-movie-line" style="color: #a78bfa;"></i> TimeLapse Landsat 9</h3>
+            <span class="tag">GIF Animado</span>
         </div>
-        <div class="window-frame">
-            <div class="window-top">
-                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-            </div>
-            <div class="img-container">
-                <img src="TimeLapse_S2.gif" alt="TimeLapse Sentinel 2">
-            </div>
+        <div class="window-top">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="img-container">
+            <img src="TimeLapse_L9.gif" alt="TimeLapse L9">
+        </div>
+        <div class="card-footer">
+            <a href="TimeLapse_L9.gif" target="_blank" class="btn-external">
+                <i class="ri-external-link-line"></i> Abrir GIF en otra ventana
+            </a>
+        </div>
+    </article>
+
+    <article class="dashboard-card">
+        <div class="card-header">
+            <h3><i class="ri-movie-line" style="color: #a78bfa;"></i> TimeLapse Sentinel 2</h3>
+            <span class="tag">GIF Animado</span>
+        </div>
+        <div class="window-top">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="img-container">
+            <img src="TimeLapse_S2.gif" alt="TimeLapse S2">
+        </div>
+        <div class="card-footer">
+            <a href="TimeLapse_S2.gif" target="_blank" class="btn-external">
+                <i class="ri-external-link-line"></i> Abrir GIF en otra ventana
+            </a>
         </div>
     </article>
 </main>
@@ -201,42 +219,30 @@
 </footer>
 
 <script>
-    // Función mejorada para crear mapas con opción de rotación
-    function crearMapa(id, lat, lon, zoom, imgUrl, bounds, rotacion = 0) {
-        var map = L.map(id).setView([lat, lon], zoom);
-        
-        // Capa satélite de alta calidad
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Esri &mdash; Satélite'
-        }).addTo(map);
+    const satelliteLayer = () => L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Esri &copy; Satélite'
+    });
 
-        // Creamos la superposición de imagen
-        var overlay = L.imageOverlay(imgUrl, bounds, {
-            opacity: 0.8,
-            interactive: true,
-            className: id + '-img' // Clase única para aplicar el giro por CSS
-        }).addTo(map);
+    // Mapa Chapala
+    var mapChapala = L.map('map-chapala').setView([20.25, -103.15], 10);
+    satelliteLayer().addTo(mapChapala);
+    var boundsChapala = [[20.10, -103.50], [20.45, -102.85]];
+    L.imageOverlay('G6_NDWI_Chapala_2025.png', boundsChapala, {opacity: 0.85}).addTo(mapChapala);
 
-        // Si hay rotación, aplicamos CSS cuando la imagen se cargue
-        if (rotacion !== 0) {
-            overlay.on('add', function () {
-                var el = overlay.getElement();
-                el.style.transformOrigin = 'center';
-                el.style.transform += ' rotate(' + rotacion + 'deg)';
-            });
-        }
-    }
+    // Mapa Rukwa con Giro
+    var mapRukwa = L.map('map-rukwa').setView([-8.0, 32.25], 9);
+    satelliteLayer().addTo(mapRukwa);
+    var boundsRukwa = [[-8.5, 31.6], [-7.5, 32.9]];
+    var overlayRukwa = L.imageOverlay('G7_MNDWI_Rukwa_2025.png', boundsRukwa, {
+        opacity: 0.85,
+        className: 'rotate-rukwa'
+    }).addTo(mapRukwa);
 
-    // --- CONFIGURACIÓN DE TUS MAPAS ---
-
-    // Chapala: (Sin rotación, suele encajar bien horizontal)
-    var boundsChapala = [[20.0, -103.6], [20.5, -102.7]]; 
-    crearMapa('map-chapala', 20.25, -103.15, 10, 'G6_NDWI_Chapala_2025.png', boundsChapala, 0);
-
-    // Rukwa: Aplicamos un giro de -5 grados para alinear con el pantano
-    var boundsRukwa = [[-8.6, 31.6], [-7.4, 32.9]];
-    crearMapa('map-rukwa', -8.0, 32.25, 9, 'G7_MNDWI_Rukwa_2025.png', boundsRukwa, -5);
-
+    overlayRukwa.on('add', function () {
+        var img = overlayRukwa.getElement();
+        img.style.transformOrigin = 'center';
+        img.style.transform += ' rotate(-5deg)';
+    });
 </script>
 
 </body>
