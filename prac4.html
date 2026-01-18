@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geografía Interactiva | Práctica 5</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +29,7 @@
             color: var(--text-main);
             min-height: 100vh;
             padding: 40px 20px;
+            position: relative;
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -52,21 +54,39 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 20px;
         }
+
+        /* Contenedor para alinear los botones a la derecha */
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             background: linear-gradient(to right, #ffffff, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .btn-back {
+
+        /* Botones del Header */
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             padding: 10px 20px;
             background: var(--card-bg);
             border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
             border-radius: 8px;
             display: flex;
-            align-items: center; gap: 8px;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .btn-header:hover {
+            border-color: var(--text-main);
+            background: rgba(255,255,255,0.1);
         }
 
         /* --- DASHBOARD CARD --- */
@@ -119,7 +139,6 @@
         .card-footer { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         footer { text-align: center; margin-top: 60px; color: var(--text-muted); }
         
-        /* Ajuste para que los Popups del mapa se vean bien en el diseño oscuro */
         .leaflet-popup-content-wrapper { background: #1f1f23; color: white; border: 1px solid var(--border); }
         .leaflet-popup-tip { background: #1f1f23; }
     </style>
@@ -129,11 +148,18 @@
 <header>
     <div class="branding">
         <h1>Geografía Interactiva</h1>
-        <p>Visualización ZONAS_VALIDAS • Práctica 5</p>
+        <p>Visualización ZONAS_VALIDAS • Práctica 4</p>
     </div>
-    <a href="index.html" class="btn-back">
-        <i class="ri-arrow-left-line"></i> Volver al Menú
-    </a>
+    
+    <div class="header-actions">
+        <a href="pdf/4_ANALISIS_TERRITORIO.pdf" download class="btn-header" style="border-color: #60a5fa;">
+            <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+        </a>
+        
+        <a href="index.html" class="btn-header">
+            <i class="ri-arrow-left-line"></i> Volver al Menú
+        </a>
+    </div>
 </header>
 
 <main>
@@ -153,7 +179,7 @@
             <span id="status" style="font-size: 0.8rem; color: var(--text-muted);">
                 <i class="ri-loader-4-line"></i> Cargando archivos...
             </span>
-            <a href="pdf/ZONAS_VALIDAS.zip" class="btn-back" style="font-size: 0.8rem; background: var(--primary); border:none;">
+            <a href="pdf/ZONAS_VALIDAS.zip" class="btn-header" style="font-size: 0.8rem; background: var(--primary); border:none;">
                 <i class="ri-download-cloud-line"></i> Descargar SHP
             </a>
         </div>
@@ -168,13 +194,11 @@
 <script src="https://unpkg.com/shpjs@3.5.0/dist/shp.min.js"></script>
 
 <script>
-    // 1. Inicializar el mapa (exactamente como en tu ejemplo)
     var map = L.map('map');
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // 2. Capa para zonas (color naranja brillante de tu ejemplo)
     var zonasLayer = L.geoJSON(null, {
         style: function(){ return {color: '#ff5722', weight: 2, fillOpacity: 0.2}; },
         onEachFeature: function(feature, layer){
@@ -184,7 +208,6 @@
         }
     }).addTo(map);
 
-    // 3. Lógica de carga de datos
     var ejemplo = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"id":"EJEMPLO"},"geometry":{"type":"Polygon","coordinates":[[[-3.69305,40.4286],[-3.69248,40.4277],[-3.69192,40.4280],[-3.69248,40.4288],[-3.69305,40.4286]]]}}]};
 
     function addGeoJSON(data){
@@ -202,16 +225,13 @@
         var geojsonCandidates = ['../ZONAS_VALIDAS.geojson','ZONAS_VALIDAS.geojson'];
         var zipCandidates = ['pdf/ZONAS_VALIDAS.zip', '../pdf/ZONAS_VALIDAS.zip'];
 
-        // Intentar GeoJSON primero
         fetch(geojsonCandidates[0]).then(r => r.ok ? r.json() : fetch(geojsonCandidates[1]).then(r2 => r2.json()))
         .then(json => addGeoJSON(json))
         .catch(() => {
-            // Si falla, intentar el ZIP
             fetch(zipCandidates[0]).then(r => r.ok ? r.arrayBuffer() : fetch(zipCandidates[1]).then(r2 => r2.arrayBuffer()))
             .then(buf => shp(buf))
             .then(geojson => addGeoJSON(geojson))
             .catch(() => {
-                console.warn("Usando datos de ejemplo");
                 addGeoJSON(ejemplo);
                 document.getElementById('status').innerText = "Archivo no encontrado. Mostrando ejemplo.";
             });

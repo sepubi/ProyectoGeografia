@@ -7,13 +7,12 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
-    
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
         :root {
             --bg-dark: #09090b;
-            --card-bg: rgba(24, 24, 27, 0.75); /* Más transparente para el fondo nuevo */
+            --card-bg: rgba(24, 24, 27, 0.75);
             --border: rgba(255, 255, 255, 0.1);
             --primary: #3b82f6;
             --primary-glow: rgba(59, 130, 246, 0.5);
@@ -29,23 +28,18 @@
             min-height: 100vh;
             padding: 40px 20px;
             position: relative;
-            
-            /* --- NUEVO FONDO --- */
-            /* Imagen de satélite nocturna */
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
             background-size: cover;
             background-position: center center;
-            background-attachment: fixed; /* El fondo se queda fijo al hacer scroll */
+            background-attachment: fixed;
         }
 
-        /* --- CAPA DE OSCURECIMIENTO --- */
-        /* Esto es vital para que no se vea "cutre". Oscurece la foto para que se lea el texto. */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(9, 9, 11, 0.85); /* Capa negra al 85% de opacidad */
-            backdrop-filter: blur(3px); /* Un ligero desenfoque a la foto de fondo */
+            background: rgba(9, 9, 11, 0.85); 
+            backdrop-filter: blur(3px);
             z-index: -1;
         }
 
@@ -61,10 +55,16 @@
             position: relative;
         }
 
+        /* Contenedor para alinear los botones a la derecha */
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             font-weight: 700;
-            /* Texto con gradiente para que destaque más */
             background: linear-gradient(to right, #ffffff, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -77,7 +77,8 @@
             margin-top: 4px;
         }
 
-        .btn-back {
+        /* Estilo para los botones del header */
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             display: flex;
@@ -92,7 +93,7 @@
             font-size: 0.9rem;
         }
 
-        .btn-back:hover {
+        .btn-header:hover {
             border-color: var(--text-main);
             background: rgba(255,255,255,0.1);
         }
@@ -107,11 +108,9 @@
             position: relative;
         }
 
-        /* --- TARJETA ESTILO DASHBOARD (Glassmorphism) --- */
         .dashboard-card {
-            /* Fondo semitransparente + desenfoque */
             background: var(--card-bg);
-            backdrop-filter: blur(15px); /* Efecto cristal más fuerte */
+            backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -141,7 +140,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .tag {
@@ -154,7 +152,6 @@
         .tag-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
         .tag-orange { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3);}
 
-        /* --- VENTANA PDF --- */
         .window-frame {
             background: #000;
             border-radius: 14px;
@@ -162,7 +159,6 @@
             position: relative;
             height: 500px; 
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
 
         .window-top {
@@ -180,14 +176,12 @@
         .yellow { background: #ffbd2e; }
         .green { background: #27c93f; }
 
-        .window-frame object, .window-frame iframe {
+        .window-frame object {
             width: 100%;
             height: calc(100% - 32px);
             display: block;
-            background: #18181b; 
         }
 
-        /* --- ACCIONES --- */
         .card-footer {
             padding: 20px 24px;
             display: flex;
@@ -212,10 +206,7 @@
             border: 1px solid rgba(255,255,255,0.2);
             background: rgba(255,255,255,0.05);
         }
-        .btn-outline:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: #fff;
-        }
+        .btn-outline:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
 
         .btn-primary {
             background: var(--primary);
@@ -223,24 +214,18 @@
             box-shadow: 0 0 20px var(--primary-glow);
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 0 30px var(--primary-glow);
-        }
+        .btn-primary:hover { filter: brightness(1.1); box-shadow: 0 0 30px var(--primary-glow); }
 
-        /* --- FOOTER --- */
         footer {
             text-align: center;
             margin-top: 60px;
             color: rgba(255,255,255,0.5);
             font-size: 0.85rem;
-            position: relative;
         }
 
         @media (max-width: 768px) {
             main { grid-template-columns: 1fr; }
             header { flex-direction: column; gap: 20px; text-align: center; }
-            body { padding: 20px 10px; }
         }
     </style>
 </head>
@@ -251,13 +236,19 @@
             <h1>Geografía Interactiva</h1>
             <p>Visualización de datos climáticos • Práctica 3</p>
         </div>
-        <a href="index.html" class="btn-back">
-            <i class="ri-arrow-left-line"></i> Volver al Menú
-        </a>
+        
+        <div class="header-actions">
+            <a href="pdf/3_TEMATICO_RASTER.pdf" download class="btn-header" style="border-color: #60a5fa;">
+                <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+            </a>
+            
+            <a href="index.html" class="btn-header">
+                <i class="ri-arrow-left-line"></i> Volver al Menú
+            </a>
+        </div>
     </header>
 
     <main>
-
         <article class="dashboard-card">
             <div class="card-header">
                 <div class="card-title">
@@ -272,8 +263,7 @@
                     <span class="dot yellow"></span>
                     <span class="dot green"></span>
                 </div>
-            <object data="pdf/PRECIPITACIONES.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">
-                    <iframe src="pdf/PRECIPITACIONES.pdf"></iframe>
+                <object data="pdf/PRECIPITACIONES.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">
                     <div style="color:white; padding:20px; text-align:center; display:flex; align-items:center; justify-content:center; height:100%;">
                         <div>
                             <i class="ri-file-warning-line" style="font-size: 2rem; color: #a1a1aa; margin-bottom: 10px; display:block;"></i>
@@ -308,8 +298,7 @@
                     <span class="dot yellow"></span>
                     <span class="dot green"></span>
                 </div>
-                    <object data="pdf/Temperatura.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">
-                    <iframe src="pdf/Temperatura.pdf"></iframe>
+                <object data="pdf/Temperatura.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">
                     <div style="color:white; padding:20px; text-align:center; display:flex; align-items:center; justify-content:center; height:100%;">
                         <div>
                             <i class="ri-file-warning-line" style="font-size: 2rem; color: #a1a1aa; margin-bottom: 10px; display:block;"></i>
@@ -329,7 +318,6 @@
                 </a>
             </div>
         </article>
-
     </main>
 
     <footer>

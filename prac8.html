@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geografía Interactiva | Práctica 8</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,6 +54,13 @@
             padding-bottom: 20px;
         }
 
+        /* Contenedor para alinear los botones a la derecha */
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             background: linear-gradient(to right, #ffffff, #60a5fa);
@@ -60,7 +68,8 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .btn-back {
+        /* Estilo para los botones del header */
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             display: flex;
@@ -69,8 +78,16 @@
             padding: 10px 20px;
             background: var(--card-bg);
             border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
             border-radius: 8px;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-header:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         /* --- GRID PRINCIPAL --- */
@@ -101,7 +118,7 @@
 
         .tag { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
 
-        /* --- VENTANA MAPA/PDF --- */
+        /* --- VENTANA MAPA --- */
         .window-frame {
             background: #000;
             border-radius: 14px;
@@ -128,13 +145,14 @@
             width: 100%;
             height: calc(100% - 32px);
             border: none;
-            background: white; /* Los mapas de Leaflet suelen verse mejor sobre blanco si cargan lento */
+            background: white;
         }
 
         footer { text-align: center; margin-top: 60px; color: var(--text-muted); padding-bottom: 40px; }
 
         @media (max-width: 768px) {
             main { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 20px; text-align: center; }
             .window-frame { height: 400px; }
         }
     </style>
@@ -146,9 +164,16 @@
         <h1>Geografía Interactiva</h1>
         <p>Análisis de Contenedores y Accidentes • Práctica 8</p>
     </div>
-    <a href="index.html" class="btn-back">
-        <i class="ri-arrow-left-line"></i> Volver al Menú
-    </a>
+
+    <div class="header-actions">
+        <a href="pdf/Folium_alumnos-8.ipynb" download class="btn-header" style="border-color: #60a5fa;">
+            <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+        </a>
+
+        <a href="index.html" class="btn-header">
+            <i class="ri-arrow-left-line"></i> Volver al Menú
+        </a>
+    </div>
 </header>
 
 <main>

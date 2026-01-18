@@ -14,7 +14,7 @@
             --bg-dark: #09090b;
             --card-bg: rgba(24, 24, 27, 0.75);
             --border: rgba(255, 255, 255, 0.1);
-            --primary: #8b5cf6; /* Morado para diferenciar esta práctica */
+            --primary: #8b5cf6; /* Morado */
             --primary-glow: rgba(139, 92, 246, 0.5);
             --text-main: #ffffff;
             --text-muted: #a1a1aa;
@@ -28,15 +28,12 @@
             min-height: 100vh;
             padding: 40px 20px;
             position: relative;
-            
-            /* Fondo tecnológico / Satélite */
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
         }
 
-        /* Capa oscura para mejorar legibilidad */
         body::before {
             content: "";
             position: fixed;
@@ -57,6 +54,13 @@
             padding-bottom: 20px;
         }
 
+        /* Contenedor para botones */
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             font-weight: 700;
@@ -72,7 +76,8 @@
             margin-top: 4px;
         }
 
-        .btn-back {
+        /* Botones superiores */
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             display: flex;
@@ -86,7 +91,11 @@
             transition: all 0.3s ease;
             font-size: 0.9rem;
         }
-        .btn-back:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        .btn-header:hover { 
+            background: rgba(255,255,255,0.1); 
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
 
         /* --- GRID --- */
         main {
@@ -136,9 +145,9 @@
         .tag-purple { background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
         .tag-green { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
 
-        /* --- VISOR DE CONTENIDO (Window Frame) --- */
+        /* --- VISOR DE CONTENIDO --- */
         .window-frame {
-            background: #18181b; /* Fondo oscuro por si carga tarde */
+            background: #18181b;
             border-radius: 14px;
             overflow: hidden;
             position: relative;
@@ -160,21 +169,19 @@
         .yellow { background: #ffbd2e; }
         .green { background: #27c93f; }
 
-        /* Estilo específico para la imagen */
         .window-frame img {
             width: 100%;
             height: calc(100% - 32px);
-            object-fit: contain; /* Ajusta la imagen sin recortarla */
-            background: #fff; /* Fondo blanco para la gráfica */
+            object-fit: contain;
+            background: #fff;
             display: block;
         }
 
-        /* Estilo específico para el iframe (Tabla) */
         .window-frame iframe {
             width: 100%;
             height: calc(100% - 32px);
             border: none;
-            background: #fff; /* Fondo blanco para leer la tabla */
+            background: #fff;
         }
 
         /* --- FOOTER CARD --- */
@@ -211,7 +218,6 @@
         }
         .btn-primary:hover { filter: brightness(1.1); box-shadow: 0 0 30px var(--primary-glow); }
 
-        /* Footer General */
         footer {
             text-align: center;
             margin-top: 60px;
@@ -232,9 +238,16 @@
             <h1>Geografía Interactiva</h1>
             <p>Análisis de Datos GNSS • Práctica 7</p>
         </div>
-        <a href="index.html" class="btn-back">
-            <i class="ri-arrow-left-line"></i> Volver al Menú
-        </a>
+
+        <div class="header-actions">
+            <a href="pdf/Practica_Alumnos_GNSS.ipynb" download class="btn-header" style="border-color: #a78bfa;">
+                <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+            </a>
+
+            <a href="index.html" class="btn-header">
+                <i class="ri-arrow-left-line"></i> Volver al Menú
+            </a>
+        </div>
     </header>
 
     <main>

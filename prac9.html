@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geografía Interactiva | Práctica 9</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,6 +54,12 @@
             padding-bottom: 20px;
         }
 
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             background: linear-gradient(to right, #ffffff, #60a5fa);
@@ -60,7 +67,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .btn-back {
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             display: flex;
@@ -69,8 +76,16 @@
             padding: 10px 20px;
             background: var(--card-bg);
             border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
             border-radius: 8px;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-header:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #60a5fa;
+            transform: translateY(-2px);
         }
 
         /* --- GRID PRINCIPAL --- */
@@ -101,12 +116,11 @@
 
         .tag { font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; background: rgba(34, 197, 94, 0.1); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
 
-        /* --- VENTANA DE IMAGEN --- */
+        /* --- VENTANA DE IMAGEN / MAPA --- */
         .window-frame {
             background: #111;
             border-radius: 14px;
             overflow: hidden;
-            height: 500px; /* Altura por defecto para otras tarjetas */
             border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
@@ -126,32 +140,17 @@
         .yellow { background: #ffbd2e; }
         .green { background: #27c93f; }
 
-        .img-container {
+        .content-container {
             width: 100%;
             height: calc(100% - 32px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .img-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-        
-        .img-container img:hover {
-            transform: scale(1.05);
+            background: white;
         }
 
         footer { text-align: center; margin-top: 60px; color: var(--text-muted); padding-bottom: 40px; }
 
         @media (max-width: 768px) {
             main { grid-template-columns: 1fr; }
-            .window-frame { height: 350px; }
+            header { flex-direction: column; gap: 20px; text-align: center; }
         }
     </style>
 </head>
@@ -162,9 +161,16 @@
         <h1>Geografía Interactiva</h1>
         <p>Índices SAVI y EVI • Práctica 9</p>
     </div>
-    <a href="index.html" class="btn-back">
-        <i class="ri-arrow-left-line"></i> Volver al Menú
-    </a>
+    
+    <div class="header-actions">
+        <a href="pdf/GEE_alumnos.ipynb" download class="btn-header" style="border-color: #60a5fa;">
+            <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+        </a>
+
+        <a href="index.html" class="btn-header">
+            <i class="ri-arrow-left-line"></i> Volver al Menú
+        </a>
+    </div>
 </header>
 
 <main>
@@ -178,7 +184,7 @@
             <div class="window-top">
                 <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
             </div>
-            <div class="img-container" style="background: white;">
+            <div class="content-container">
                 <iframe src="Medio_Ambiente_Dual_Puig_David.html" style="width: 100%; height: 100%; border: none;"></iframe>
             </div>
         </div>

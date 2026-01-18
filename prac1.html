@@ -28,15 +28,12 @@
             min-height: 100vh;
             padding: 40px 20px;
             position: relative;
-            
-            /* Fondo tecnológico / Satélite */
             background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
         }
 
-        /* Capa oscura */
         body::before {
             content: "";
             position: fixed;
@@ -57,6 +54,13 @@
             padding-bottom: 20px;
         }
 
+        /* Contenedor para alinear los botones a la derecha */
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             font-weight: 700;
@@ -72,7 +76,8 @@
             margin-top: 4px;
         }
 
-        .btn-back {
+        /* Estilo base para botones del header */
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             display: flex;
@@ -86,19 +91,17 @@
             transition: all 0.3s ease;
             font-size: 0.9rem;
         }
-        .btn-back:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        .btn-header:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
 
-        /* --- CONTENEDOR PRINCIPAL (MODIFICADO PARA CENTRAR) --- */
+        /* --- CONTENEDOR PRINCIPAL --- */
         main {
             max-width: 1400px;
             margin: 0 auto;
-            /* CAMBIO: Usamos Flexbox en lugar de Grid para centrar un solo elemento */
             display: flex;
             justify-content: center; 
             padding-bottom: 40px;
         }
 
-        /* --- CARD (MODIFICADO EL ANCHO) --- */
         .dashboard-card {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
@@ -109,8 +112,6 @@
             flex-direction: column;
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
             transition: transform 0.3s ease;
-            
-            /* CAMBIO: Ancho controlado para que no se estire demasiado */
             width: 100%;
             max-width: 900px; 
         }
@@ -140,7 +141,6 @@
         }
         .tag-green { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
 
-        /* --- VISOR DE CONTENIDO --- */
         .window-frame {
             background: #18181b; 
             border-radius: 14px;
@@ -172,7 +172,6 @@
             display: block;
         }
 
-        /* --- FOOTER CARD --- */
         .card-footer {
             padding: 20px 24px;
             display: flex;
@@ -206,7 +205,6 @@
         }
         .btn-primary:hover { filter: brightness(1.1); box-shadow: 0 0 30px var(--primary-glow); }
 
-        /* Footer General */
         footer {
             text-align: center;
             margin-top: 60px;
@@ -216,7 +214,7 @@
 
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 20px; text-align: center; }
-            .window-frame { height: 350px; } /* Ajuste de altura para móviles */
+            .window-frame { height: 350px; }
         }
     </style>
 </head>
@@ -227,13 +225,19 @@
             <h1>Geografía Interactiva</h1>
             <p>Introducción a QGis • Práctica 1</p>
         </div>
-        <a href="index.html" class="btn-back">
-            <i class="ri-arrow-left-line"></i> Volver al Menú
-        </a>
+        
+        <div class="header-actions">
+            <a href="pdf/1_INTRODUCCION QGIS-1.pdf" download class="btn-header" style="border-color: var(--primary);">
+                <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+            </a>
+            
+            <a href="index.html" class="btn-header">
+                <i class="ri-arrow-left-line"></i> Volver al Menú
+            </a>
+        </div>
     </header>
 
     <main>
-
         <article class="dashboard-card">
             <div class="card-header">
                 <div class="card-title">
@@ -260,7 +264,6 @@
                 </a>
             </div>
         </article>
-
     </main>
 
     <footer>

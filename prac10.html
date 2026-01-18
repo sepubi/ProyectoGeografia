@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geografía Interactiva | Práctica 10</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -38,6 +39,7 @@
             background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(3px); z-index: -1;
         }
 
+        /* --- HEADER --- */
         header {
             max-width: 1400px;
             margin: 0 auto 40px;
@@ -48,6 +50,12 @@
             padding-bottom: 20px;
         }
 
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .branding h1 {
             font-size: 2rem;
             background: linear-gradient(to right, #ffffff, #60a5fa);
@@ -55,8 +63,8 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* BOTÓN VOLVER CON FLECHA */
-        .btn-back {
+        /* Botones superiores */
+        .btn-header {
             color: var(--text-main);
             text-decoration: none;
             display: flex;
@@ -65,14 +73,16 @@
             padding: 10px 20px;
             background: var(--card-bg);
             border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             font-size: 0.9rem;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .btn-back:hover {
+        .btn-header:hover {
             background: var(--primary);
-            transform: translateX(-5px);
+            border-color: #fff;
+            transform: translateY(-2px);
         }
 
         main {
@@ -130,6 +140,12 @@
         .btn-external:hover { color: var(--primary); }
 
         footer { text-align: center; margin-top: 60px; color: var(--text-muted); padding-bottom: 40px; }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; text-align: center; }
+            main { grid-template-columns: 1fr; }
+            .window-frame { height: 350px; }
+        }
     </style>
 </head>
 <body>
@@ -139,9 +155,16 @@
         <h1>Geografía Interactiva</h1>
         <p>Análisis de Aguas y TimeLapse • Práctica 10</p>
     </div>
-    <a href="index.html" class="btn-back">
-        <i class="ri-arrow-left-line"></i> Volver al Menú
-    </a>
+
+    <div class="header-actions">
+        <a href="pdf/NDWI_alumno.ipynb" download class="btn-header" style="border-color: #60a5fa;">
+            <i class="ri-file-pdf-line"></i> Descargar Ejercicio
+        </a>
+
+        <a href="index.html" class="btn-header">
+            <i class="ri-arrow-left-line"></i> Volver al Menú
+        </a>
+    </div>
 </header>
 
 <main>
